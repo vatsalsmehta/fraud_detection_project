@@ -1,25 +1,35 @@
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
 import tensorflow as tf
 import os
 from datetime import datetime 
 from sklearn.metrics import roc_auc_score as auc 
 import seaborn as sns
 
-import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
-
-
 
 df = pd.read_csv('creditcard.csv')
 
 
 #for data visualization of dataset mostly sab kam aayega:
-
+print("\n\n\n\n\n\n\n\Data Visualization begins now for beginners to understand the dataset better\n\n\n\n\n")
 print(df.shape)
 print(df.head)
 print(df.columns)
 print(df.dtypes)
+
+#using scatter to plot graph of two entities of dataset
+#here i plotted graph of column Time and Amount
+# create a figure and axis
+fig, ax = plt.subplots()
+# scatter the sepal_length against the sepal_width
+ax.scatter(df['Time'], df['Amount'])
+# set a title and labels
+ax.set_title('creditcard fraud dataset visualization. Close this graph to proceed forward and do same for all the next vsualizations')
+ax.set_xlabel('Time')
+ax.set_ylabel('Amount')
+plt.show()
 
 
 # create figure and axis
@@ -39,7 +49,7 @@ for i, cn in enumerate(df.columns[0:1]):#o:1 0th column ka print karega as upper
     ax = plt.subplot(gs[i])
     sns.distplot(df[cn][df.Class == 1], bins=50)
     sns.distplot(df[cn][df.Class == 0], bins=50)
-    ax.set_xlabel('vatsal ka graph')
+    ax.set_xlabel('Time')
     ax.set_title('histogram of feature: ' + str(cn))
 plt.show()
 
@@ -162,7 +172,8 @@ with tf.Session() as sess:
                   "Train auc=", "{:.4f}".format(auc(train_y, train_batch_mse)), 
                   "Time elapsed=", "{}".format(datetime.now() - now))
 
-    print("Optimization Finished!")
+    print("\nOptimization Finished!\n")
+    print("FINAL TRAINING ACCURACY ACHIEVED: ", "{:.4f}".format(auc(train_y, train_batch_mse)), )
     
     save_path = saver.save(sess, save_model)
     print("Model saved in file: %s" % save_path)
