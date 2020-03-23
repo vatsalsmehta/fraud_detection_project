@@ -14,10 +14,11 @@ df = pd.read_csv('creditcard.csv')
 
 #for data visualization of dataset mostly sab kam aayega:
 print("\n\n\n\n\n\n\n\Data Visualization begins now for beginners to understand the dataset better\n\n\n\n\n")
-print(df.shape)
-print(df.head)
-print(df.columns)
-print(df.dtypes)
+print(df.shape)#tocheck the shape of dataset ie. number of rows and columns
+print(df.head)#basically prints the whole dataset
+print(df.columns)#shows all the names of coulmns
+print(df.dtypes)#shows data type (of all entities in columns)
+print(df.corr())#shows correlation between data
 
 #using scatter to plot graph of two entities of dataset
 #here i plotted graph of column Time and Amount
@@ -56,12 +57,17 @@ plt.show()
 
 TEST_RATIO = 0.25
 df.sort_values('Time', inplace = True)
-TRA_INDEX = int((1-TEST_RATIO) * df.shape[0])
-train_x = df.iloc[:TRA_INDEX, 1:-2].values
-train_y = df.iloc[:TRA_INDEX, -1].values
+TRA_INDEX = int((1-TEST_RATIO) * df.shape[0])#due to this only 75% of the dataset will be used for training and we take 75% of dataset in TRA_INDEX
+#input values 1 to 29th column me hai and output 31st me.30th column ka kuch kaam nahi hai and usse overfitting horahai
 
-test_x = df.iloc[TRA_INDEX:, 1:-2].values
-test_y = df.iloc[TRA_INDEX:, -1].values
+train_x = df.iloc[:TRA_INDEX, 1:30].values #we write 1:30 to take input from 1st column to 29th column as upperbound is neglected in python syntax.so 30th column is ignored here,or you could also write
+#train_x = df.iloc[:TRA_INDEX, 1:-2] #this takes all columns as input except two columns from last ie-it takes 1 to 29 columns numbers
+train_y = df.iloc[:TRA_INDEX, -1].values #takes only last column as input ie- 31st column(last column)
+
+test_x = df.iloc[TRA_INDEX:, 1:30].values
+test_y = df.iloc[TRA_INDEX:, -1].values  
+
+
 
 
 print("Total train examples: {}, total fraud cases: {}, equal to {:.5f} of total cases. ".format(train_x.shape[0], np.sum(train_y), np.sum(train_y)/train_x.shape[0]))
@@ -69,7 +75,7 @@ print("Total train examples: {}, total fraud cases: {}, equal to {:.5f} of total
 print("Total test examples: {}, total fraud cases: {}, equal to {:.5f} of total cases. ".format(test_x.shape[0], np.sum(test_y), np.sum(test_y)/test_y.shape[0]))
 
 
-
+#normalization for tanh activation
 cols_mean = []
 cols_std = []
 for c in range(train_x.shape[1]):
