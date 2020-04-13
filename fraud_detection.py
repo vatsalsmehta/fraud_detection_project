@@ -1,3 +1,6 @@
+
+#Read requirements first(Tensorflow 1.14 lagega)Commented many things in hindi so everyone who uses my project from github repo gets it.
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -27,7 +30,7 @@ fig, ax = plt.subplots()
 # scatter the sepal_length against the sepal_width
 ax.scatter(df['Time'], df['Amount'])
 # set a title and labels
-ax.set_title('creditcard fraud dataset visualization. Close this graph to proceed forward and do same for all the next vsualizations')
+ax.set_title('Close this graph to proceed forward and do same for all the next vsualizations')
 ax.set_xlabel('Time')
 ax.set_ylabel('Amount')
 plt.show()
@@ -58,10 +61,12 @@ plt.show()
 TEST_RATIO = 0.25
 df.sort_values('Time', inplace = True)
 TRA_INDEX = int((1-TEST_RATIO) * df.shape[0])#due to this only 75% of the dataset will be used for training and we take 75% of dataset in TRA_INDEX
-#input values 1 to 29th column me hai and output 31st me.30th column ka kuch kaam nahi hai and usse overfitting horahai
+
+#input values 1 to 29th column me hai and output 31st me.30th column ka kuch kaam nahi hai and usse overfitting hora hai,input values x me aur output y me
 
 train_x = df.iloc[:TRA_INDEX, 1:30].values #we write 1:30 to take input from 1st column to 29th column as upperbound is neglected in python syntax.so 30th column is ignored here,or you could also write
-#train_x = df.iloc[:TRA_INDEX, 1:-2] #this takes all columns as input except two columns from last ie-it takes 1 to 29 columns numbers
+#train_x = df.iloc[:TRA_INDEX, 1:-2] #this takes all columns as input except two columns from last 
+#ie-it takes 1 to 29 columns numbers
 train_y = df.iloc[:TRA_INDEX, -1].values #takes only last column as input ie- 31st column(last column)
 
 test_x = df.iloc[TRA_INDEX:, 1:30].values
@@ -184,5 +189,21 @@ with tf.Session() as sess:
     save_path = saver.save(sess, save_model)
     print("Model saved in file: %s" % save_path)
     
+    
+#test data pe try karenge    
+save_model = os.path.join(data_dir, 'temp_saved_model_1layer.ckpt')
+saver = tf.train.Saver()
 
+# Initializing the variables
+init = tf.global_variables_initializer()
+
+with tf.Session() as sess:
+    now = datetime.now()
+    
+    saver.restore(sess, save_model)
+    
+    test_batch_mse = sess.run(batch_mse, feed_dict={X: test_x})
+    
+    print("Test auc score: {:.4f}".format(auc(test_y, test_batch_mse)))
+    
 
